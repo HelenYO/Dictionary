@@ -1,12 +1,13 @@
 #include "finder.h"
 #include "QDir"
 
-finder::finder(std::string path, std::string text_to_find, bool mod_letters)
+finder::finder(std::string path, std::string text_to_find, bool mod_letters, int max_count)
 {
     QDir dir = QDir::currentPath();
     this->path = dir.canonicalPath().toStdString() + "/../../../../" + path;
     this->text_to_find = text_to_find;
     this->is_mod_letters = mod_letters;
+    this->max_count = max_count;
 }
 
 finder::~finder() = default;
@@ -37,11 +38,18 @@ void finder::process()
     std::ifstream fin(path, std::ios::binary);
     std::string text;
     std::cmatch m;
+    char prev = '$';
+    int count = max_count/20;
     while (!fin.eof())
     {
          std::getline(fin, text);
          if (std::regex_match(text.c_str(), m, rex)) {
              emit(add_to_list(QString::fromStdString(text)));
+         }
+         count--;
+         if(count == 0) {
+             emit(update_progress_bar());
+             count = max_count/20;
          }
     }
     emit finished();

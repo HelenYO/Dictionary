@@ -13,7 +13,7 @@ class finder : public QObject
     Q_OBJECT
 
 public:
-    finder(std::string path, std::string text_to_find, bool mod_letters);
+    finder(std::string path, std::string text_to_find, bool mod_letters, int max_count);
     ~finder();
 
 private:
@@ -25,13 +25,14 @@ public slots:
 
 signals:
     void add_to_list(QString add);
-
+    void update_progress_bar();
     void finished();
 
 private:
     std::string path;
     std::string text_to_find;
     bool is_mod_letters;
+    int max_count;
 };
 
 #endif // FINDER_H

@@ -19,13 +19,16 @@ public:
 private slots:
     void add_to_list(QString add);
     void finish_work();
+    void update_progress();
 
 private:
     void find_words();
+    int preprocess_max_count();
 
 private:
     Ui::MainWindow *ui;
     QThread* thread = nullptr;
-    std::clock_t time;
+    std::string path = "dict/words1.txt";
+    int max_count;
 };
 #endif // MAINWINDOW_H
