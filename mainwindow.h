@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "finder.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -15,12 +16,16 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void add_to_list(QString add);
+    void finish_work();
+
 private:
     void find_words();
-    std::string get_file_string();
-    void replaceAll(std::string& source, const std::string& from, const std::string& to);
 
 private:
     Ui::MainWindow *ui;
+    QThread* thread = nullptr;
+    std::clock_t time;
 };
 #endif // MAINWINDOW_H
