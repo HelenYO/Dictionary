@@ -13,7 +13,7 @@ class finder : public QObject
     Q_OBJECT
 
 public:
-    finder(std::string path, std::string text_to_find);
+    finder(std::string path, std::string text_to_find, bool mod_letters);
     ~finder();
 
 private:
@@ -31,6 +31,7 @@ signals:
 private:
     std::string path;
     std::string text_to_find;
+    bool is_mod_letters;
 };
 
 #endif // FINDER_H

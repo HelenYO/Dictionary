@@ -4,6 +4,7 @@
 #include <regex>
 #include <iostream>
 #include <QThread>
+#include <QDir>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -16,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->listWidget->clear();
 
     connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::find_words);
-
+    ui->checkBox->setChecked(false);
     }
 
 MainWindow::~MainWindow()
@@ -32,12 +33,11 @@ void MainWindow::find_words()
     ui->pushButton->setEnabled(false);
     ui->listWidget->clear();
 
-
     std::string text_to_find = ui->lineEdit->text().toStdString();
-    std::string path = "/Users/elena/Desktop/JB/dict/words.txt";
+    std::string path = "dict/words.txt";
 
     thread = new QThread;
-    auto *worker = new finder(path, text_to_find);
+    auto *worker = new finder(path, text_to_find, ui->checkBox->isChecked());
     worker->moveToThread(thread);
 
     connect(thread, SIGNAL(started()), worker, SLOT(process()));
@@ -46,8 +46,6 @@ void MainWindow::find_words()
     connect(worker, SIGNAL(finished()), this, SLOT(finish_work()));
 
     thread->start();
-
-
 }
 
 void MainWindow::add_to_list(QString add) {
