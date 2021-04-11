@@ -34,7 +34,7 @@ void MainWindow::find_words()
     ui->listWidget->clear();
 
     std::string text_to_find = ui->lineEdit->text().toStdString();
-    std::string path = "dict/words.txt";
+    std::string path = "dict/words1.txt";
 
     thread = new QThread;
     auto *worker = new finder(path, text_to_find, ui->checkBox->isChecked());

@@ -13,15 +13,13 @@ finder::~finder() = default;
 
 void finder::process()
 {
-    std::string file_content = get_file_string();
-
     std::string for_rex = text_to_find;
+    replaceAll(for_rex, ".", "\\.");
+    replaceAll(for_rex, "'", "\\'");
 
     std::regex rex;
     if(!is_mod_letters)
     {
-        replaceAll(for_rex, ".", "\\.");
-        replaceAll(for_rex, "'", "\\'");
         rex = (".*" + for_rex + ".*").c_str();
     }
     else
@@ -30,19 +28,22 @@ void finder::process()
         for(int i = 0; i < for_rex.size(); i++)
         {
             tmp += for_rex[i];
+            if (for_rex[i] == '\\') continue;
             tmp += ".*";
         }
         rex = (".*" + tmp).c_str();
     }
 
-    std::sregex_iterator beg{ file_content.cbegin(), file_content.cend(), rex };
-    std::sregex_iterator end{};
-    std::string res;
-    for (auto i = beg; i != end; ++i)
+    std::ifstream fin(path, std::ios::binary);
+    std::string text;
+    std::cmatch m;
+    while (!fin.eof())
     {
-        emit(add_to_list(QString::fromStdString(i->str())));
+         std::getline(fin, text);
+         if (std::regex_match(text.c_str(), m, rex)) {
+             emit(add_to_list(QString::fromStdString(text)));
+         }
     }
-
     emit finished();
 }
 
